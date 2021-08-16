@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Repository\Eloquent\OrderMsgRepositoryInterface;
 use App\Repository\Eloquent\OrderRateRepositoryInterface;
+use App\Repository\OrderRateSendMsgInterface;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Support\Facades\Storage;
 
 class OrderRateController extends BaseController
 {
@@ -13,9 +14,24 @@ class OrderRateController extends BaseController
      * @var OrderRateRepositoryInterface
      */
     private $orderRateRepository;
+    /**
+     * @var OrderMsgRepositoryInterface
+     */
+    private $orderRateMsgRepository;
 
-    public function __construct(OrderRateRepositoryInterface $orderRateRepository) {
+    /**
+     * @var OrderRateSendMsgInterface
+     */
+    private $orderMsgRepository;
+
+    public function __construct(
+        OrderRateRepositoryInterface $orderRateRepository,
+        OrderMsgRepositoryInterface $orderMsgRepository,
+        OrderRateSendMsgInterface $orderRateMsgRepository
+    ) {
         $this->orderRateRepository = $orderRateRepository;
+        $this->orderRateMsgRepository = $orderMsgRepository;
+        $this->orderMsgRepository = $orderRateMsgRepository;
     }
 
     /**
@@ -61,6 +77,7 @@ class OrderRateController extends BaseController
      */
     public function getComment($id) {
         error_log('message/'.$id);
+        return $this->orderRateMsgRepository->getMsg($id);
     }
 
     /**
@@ -69,13 +86,9 @@ class OrderRateController extends BaseController
      * @param Request $request
      */
     public function saveSendMessage(Request $request) {
-        Storage::put('orders_rate_config.txt', (string)$request->input('message'), 'private');
+        $this->orderRateMsgRepository->set($request->input('message'));
     }
     public function getSendMessage() {
-        try {
-            return Storage::get('orders_rate_config.txt');
-        } catch (\Exception $e) {
-            abort(500);
-        }
+        $this->orderRateMsgRepository->get();
     }
 }

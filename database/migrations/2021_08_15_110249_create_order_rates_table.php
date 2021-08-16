@@ -16,6 +16,8 @@ class CreateOrderRatesTable extends Migration
         Schema::create('order_rates', function (Blueprint $table) {
             $table->integer('order_id')->primary();
             $table->smallInteger('rate');
+            $table->boolean('sent');
+            $table->string('message', 1000);
             $table->timestamps();
         });
     }
