@@ -12,10 +12,10 @@ class OrderRate extends Model
     protected $table = 'order_rates';
     protected $primaryKey = 'order_id';
     public $incrementing = false;
-    protected $fillable = ['order_id', 'rate', 'message', 'sent'];
+    protected $fillable = ['order_id', 'rate', 'comment', 'sent'];
 
-    private $orderId;
-    private $rate;
-    private $message;
-    private $sent;
+    protected $attributes = [
+        'sent' => false,
+        'comment' => '',
+    ];
 }

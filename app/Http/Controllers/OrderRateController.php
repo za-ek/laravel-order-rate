@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Repository\Eloquent\OrderMsgRepositoryInterface;
+use App\Repository\Eloquent\OrderCommentRepositoryInterface;
 use App\Repository\Eloquent\OrderRateRepositoryInterface;
 use App\Repository\OrderRateSendMsgInterface;
 use Illuminate\Http\Request;
@@ -15,9 +15,9 @@ class OrderRateController extends BaseController
      */
     private $orderRateRepository;
     /**
-     * @var OrderMsgRepositoryInterface
+     * @var OrderCommentRepositoryInterface
      */
-    private $orderRateMsgRepository;
+    private $orderRateCommentRepository;
 
     /**
      * @var OrderRateSendMsgInterface
@@ -26,11 +26,11 @@ class OrderRateController extends BaseController
 
     public function __construct(
         OrderRateRepositoryInterface $orderRateRepository,
-        OrderMsgRepositoryInterface $orderMsgRepository,
+        OrderCommentRepositoryInterface $orderRateCommentRepository,
         OrderRateSendMsgInterface $orderRateMsgRepository
     ) {
         $this->orderRateRepository = $orderRateRepository;
-        $this->orderRateMsgRepository = $orderMsgRepository;
+        $this->orderRateCommentRepository = $orderRateCommentRepository;
         $this->orderMsgRepository = $orderRateMsgRepository;
     }
 
@@ -44,9 +44,8 @@ class OrderRateController extends BaseController
     public function saveRate($id, $rate) {
         if($this->orderRateRepository->setRate($id, $rate)) {
             return response()->json($this->orderRateRepository->find($id));
-        } else {
-            abort(500);
         }
+        abort(500);
     }
 
     /**
@@ -66,29 +65,31 @@ class OrderRateController extends BaseController
      *
      * @param Request $request
      * @param $id
+     * @return \Illuminate\Http\JsonResponse
      */
     public function saveComment(Request $request, $id) {
-        $message = $request->input('message');
-        error_log('message/'.$id.'/'.$message);
+        return response()->json(
+            $this->orderRateCommentRepository->setComment($id, $request->input('comment'))
+        );
     }
 
     /**
      * Получить комментарий к заказу
      */
     public function getComment($id) {
-        error_log('message/'.$id);
-        return $this->orderRateMsgRepository->getMsg($id);
+        return response()->json(['comment' => $this->orderRateCommentRepository->getComment($id)]);
     }
 
     /**
      * Админка - сообщение пользователю с просьбой проставить оценку
      *
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function saveSendMessage(Request $request) {
-        $this->orderRateMsgRepository->set($request->input('message'));
+        return response()->json($this->orderMsgRepository->set($request->input('message')));
     }
     public function getSendMessage() {
-        $this->orderRateMsgRepository->get();
+        return response()->json(['message' => $this->orderMsgRepository->get()]);
     }
 }
