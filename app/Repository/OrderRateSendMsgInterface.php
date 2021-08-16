@@ -2,6 +2,6 @@
 namespace App\Repository;
 
 interface OrderRateSendMsgInterface {
-    public function get();
-    public function set($msg);
+    public function getMessage();
+    public function setMessage($msg);
 }

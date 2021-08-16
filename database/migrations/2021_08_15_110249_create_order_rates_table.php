@@ -17,7 +17,7 @@ class CreateOrderRatesTable extends Migration
             $table->integer('order_id')->primary();
             $table->smallInteger('rate');
             $table->boolean('sent');
-            $table->string('message', 1000);
+            $table->string('comment', 1000);
             $table->timestamps();
         });
     }

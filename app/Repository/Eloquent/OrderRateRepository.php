@@ -8,7 +8,7 @@ class OrderRateRepository
     extends BaseRepository
     implements
         OrderRateRepositoryInterface,
-        OrderMsgRepositoryInterface
+        OrderCommentRepositoryInterface
 {
     public function __construct(OrderRate $model) {
         parent::__construct($model);
@@ -25,18 +25,9 @@ class OrderRateRepository
         }
     }
 
-    public function setRate($id, $rate) { self::setOrCreate($id, 'rate', $rate); }
-    public function setMsg($id, $msg) { self::setOrCreate($id, 'msg', $msg); }
+    public function setRate($id, $rate) { return self::setOrCreate($id, 'rate', $rate); }
+    public function setComment($id, $msg) { return self::setOrCreate($id, 'comment', $msg); }
 
-    public function getMsg($id) {
-        /**
-         * @var OrderRate $obj
-         */
-        if($obj = OrderRate::findOrFail($id)) {
-            return $obj->getMessage();
-        }
-
-        $ex = new ModelNotFoundException(OrderRate::class, $id);
-        throw $ex;
-    }
+    public function getRate($id) { return $this->model->findOrFail($id)->rate; }
+    public function getComment($id) { return $this->model->findOrFail($id)->comment; }
 }

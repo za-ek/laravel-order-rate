@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Repository\OrderRateMsgInterface;
+use App\Repository\OrderRateSendMsgInterface;
 use Illuminate\Console\Command;
 
 class OrderRateSendNotification extends Command
@@ -34,15 +34,15 @@ class OrderRateSendNotification extends Command
     /**
      * Execute the console command.
      *
-     * @param OrderRateMsgInterface $orderRateMsg
+     * @param OrderRateSendMsgInterface $orderRateMsg
      * @param $orderId
      * @return int
      */
-    public function handle(OrderRateMsgInterface $orderRateMsg, $orderId)
+    public function handle(OrderRateSendMsgInterface $orderRateMsg, $orderId)
     {
         // Дёрнуть пуш-сервис с текстом
         error_log("Отправляю сообщение заказу {$orderId}");
-        $orderRateMsg->get();
+        $orderRateMsg->getMessage();
 
         return 0;
     }

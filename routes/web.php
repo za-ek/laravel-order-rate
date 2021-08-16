@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\OrderRateController;
-use App\Http\Middleware\OrderOwner;
 use Illuminate\Support\Facades\Route;
 
 /*

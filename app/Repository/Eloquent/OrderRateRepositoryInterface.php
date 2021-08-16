@@ -8,4 +8,5 @@ namespace App\Repository\Eloquent;
 interface OrderRateRepositoryInterface
 {
     public function setRate($id, $rate);
+    public function getRate($id);
 }
